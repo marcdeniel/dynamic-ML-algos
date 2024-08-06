@@ -1,0 +1,46 @@
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+from sklearn.metrics import accuracy_score, classification_report
+
+def collect_text_data():
+num_samples = int(input("Enter the number of text samples: "))
+texts = []
+sentiments = []
+
+for i in range(num_samples):
+    text = input(f"\nEnter text sample {i+1}: ")
+    sentiment = input("Enter sentiment (positive/negative): ").strip().lower()
+    texts.append(text)
+    sentiments.append(sentiment)
+
+return texts, sentiments
+texts, sentiments = collect_text_data()
+print("\nCollected Text Data:")
+for text, sentiment in zip(texts, sentiments):
+print(f"Text: {text}, Sentiment: {sentiment}")
+
+Step 2: Text Data Processing
+
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(texts)
+y = [1 if sentiment == 'positive' else 0 for sentiment in sentiments]
+
+model = MultinomialNB()
+model.fit(X, y)
+
+
+y_pred = model.predict(X)
+print("\nModel Evaluation:")
+print(f"Accuracy: {accuracy_score(y, y_pred)}")
+print("\nClassification Report:")
+print(classification_report(y, y_pred))
+
+
+def predict_sentiment(text):
+X_new = vectorizer.transform([text])
+prediction = model.predict(X_new)
+return 'positive' if prediction == 1 else 'negative'
+
+new_text = input("\nEnter a new text for sentiment prediction: ")
+print(f"Predicted Sentiment: {predict_sentiment(new_text)}")
