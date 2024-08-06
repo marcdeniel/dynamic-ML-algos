@@ -1,0 +1,58 @@
+import pandas as pd
+
+def collect_dirty_data():
+num_rows = int(input("Enter the number of rows: "))
+num_columns = int(input("Enter the number of columns: "))
+column_names = [input(f"Enter name of column {i+1}: ") for i in range(num_columns)]
+
+data = {col: [] for col in column_names}
+
+for i in range(num_rows):
+    print(f"\nEnter data for row {i+1}:")
+    for col in column_names:
+        value = input(f"Enter value for {col}: ")
+        data[col].append(value)
+
+return pd.DataFrame(data)
+df = collect_dirty_data()
+print("\nCollected DataFrame:")
+print(df)
+
+
+#missing data
+
+missing_value_strategy = input("Enter the missing value strategy (drop/fill): ").strip().lower()
+if missing_value_strategy == "drop":
+df_cleaned = df.dropna()
+elif missing_value_strategy == "fill":
+fill_value = input("Enter the value to fill missing data with: ")
+df_cleaned = df.fillna(fill_value)
+else:
+df_cleaned = df
+
+print("\nDataFrame after handling missing data:")
+print(df_cleaned)
+
+
+#duplicates
+
+duplicate_strategy = input("Enter the duplicate handling strategy (drop/keep): ").strip().lower()
+if duplicate_strategy == "drop":
+df_cleaned = df_cleaned.drop_duplicates()
+
+print("\nDataFrame after handling duplicates:")
+print(df_cleaned)
+
+#conversion
+
+for col in df_cleaned.columns:
+data_type = input(f"Enter the data type for column {col} (int/float/str): ").strip().lower()
+if data_type == "int":
+df_cleaned[col] = pd.to_numeric(df_cleaned[col], errors='coerce').astype('Int64')
+elif data_type == "float":
+df_cleaned[col] = pd.to_numeric(df_cleaned[col], errors='coerce').astype(float)
+elif data_type == "str":
+df_cleaned[col] = df_cleaned[col].astype(str)
+
+print("\nDataFrame after converting data types:")
+print(df_cleaned)
