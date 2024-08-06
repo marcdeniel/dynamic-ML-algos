@@ -17,9 +17,9 @@ X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
 param_grid = {
-    'C': [0.1, 1, 10, 100],  # Regularization parameter
-    'gamma': ['scale', 'auto'],  # Kernel coefficient
-    'kernel': ['linear', 'rbf']  # Kernel type
+    'C': [0.1, 1, 10, 100],  #parameter 
+    'gamma': ['scale', 'auto'],  #coefficient
+    'kernel': ['linear', 'rbf']  #type
 }
 
 #gridsearchCV fit
