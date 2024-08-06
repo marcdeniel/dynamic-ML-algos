@@ -1,0 +1,36 @@
+from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
+
+df = collect_classification_data()
+print("\nCollected DataFrame:")
+print(df)
+
+features = df.drop(columns=[df.columns[-1]])
+target = df[df.columns[-1]]
+
+target = target.astype('category').cat.codes
+
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+param_grid = {
+    'C': [0.1, 1, 10, 100],  # Regularization parameter
+    'gamma': ['scale', 'auto'],  # Kernel coefficient
+    'kernel': ['linear', 'rbf']  # Kernel type
+}
+
+#gridsearchCV fit
+grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=2)
+grid.fit(X_train, y_train)
+
+print("\nBest Parameters found by GridSearchCV:")
+print(grid.best_params_)
+
+y_pred = grid.predict(X_test)
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
